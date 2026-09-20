@@ -606,7 +606,7 @@ status.textContent="Shift is currently looking healthy. Keep monitoring performa
 
 }
 
-function calculateForecast(){
+window.calculateForecast = function(){
 
 let sales=+document.getElementById("forecastSales").value||0;
 let covers=+document.getElementById("forecastCovers").value||0;
@@ -641,8 +641,8 @@ else{
 status.className="status good";
 status.textContent="Forecast labour is within the current guideline.";
 }
-
-}  function show(id,btn){
+}
+function show(id,btn){
 
 document.querySelectorAll("section")
 .forEach(x=>x.classList.add("hidden"));
