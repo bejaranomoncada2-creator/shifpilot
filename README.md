@@ -1,0 +1,2 @@
+# shifpilot
+Hospitality management app
