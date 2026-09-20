@@ -204,7 +204,7 @@ header{display:block}
 
 <nav>
 <button class="active" onclick="show('dashboard',this)">Dashboard</button>
-<button onclick="show('checklists',this)">Checklists</button>
+  <button onclick="show('forecast',this)">Labour Forecast</button><button onclick="show('checklists',this)">Checklists</button>
 <button onclick="show('handover',this)">Handover</button>
 <button onclick="show('weekly',this)">Weekly Review</button>
 </nav>
@@ -343,7 +343,75 @@ Enter today's figures to see your shift status.
 </section>
 
 
-<section id="checklists" class="hidden">
+<section id="forecast" class="hidden">
+
+<div class="card">
+
+<h2>Labour Forecast</h2>
+
+<p class="small">
+Forecast your labour cost before the shift starts.
+</p>
+
+<div class="formgrid">
+
+<div>
+<div class="label">Expected Sales</div>
+<input id="forecastSales" type="number" placeholder="e.g. 10000">
+</div>
+
+<div>
+<div class="label">Bookings / Covers</div>
+<input id="forecastCovers" type="number" placeholder="e.g. 150">
+</div>
+
+<div>
+<div class="label">Current Staff</div>
+<input id="forecastStaff" type="number" placeholder="e.g. 12">
+</div>
+
+<div>
+<div class="label">Hours per Staff Member</div>
+<input id="forecastHours" type="number" step="0.5" placeholder="e.g. 8">
+</div>
+
+<div>
+<div class="label">Hourly Labour Cost</div>
+<input id="forecastRate" type="number" step="0.01" placeholder="e.g. 13.50">
+</div>
+
+</div>
+
+<br>
+
+<button class="primary" onclick="calculateForecast()">
+Calculate Forecast
+</button>
+
+<div class="grid section">
+
+<div class="card">
+<div class="label">Forecast Labour</div>
+<div class="value" id="forecastLabour">£0</div>
+</div>
+
+<div class="card">
+<div class="label">Forecast Labour %</div>
+<div class="value" id="forecastLabourPct">0%</div>
+</div>
+
+<div class="card">
+<div class="label">Labour Cost per Cover</div>
+<div class="value" id="labourPerCover">£0</div>
+</div>
+
+</div>
+
+<div id="forecastStatus" class="section"></div>
+
+</div>
+
+</section>  <section id="checklists" class="hidden">
 
 <div class="card">
 
@@ -538,7 +606,43 @@ status.textContent="Shift is currently looking healthy. Keep monitoring performa
 
 }
 
-function show(id,btn){
+function calculateForecast(){
+
+let sales=+document.getElementById("forecastSales").value||0;
+let covers=+document.getElementById("forecastCovers").value||0;
+let staff=+document.getElementById("forecastStaff").value||0;
+let hours=+document.getElementById("forecastHours").value||0;
+let rate=+document.getElementById("forecastRate").value||0;
+
+let labour=staffhoursrate;
+let labourPct=sales?(labour/sales*100):0;
+let labourPerCover=covers?(labour/covers):0;
+
+document.getElementById("forecastLabour").textContent=
+money(labour);
+
+document.getElementById("forecastLabourPct").textContent=
+labourPct.toFixed(1)+"%";
+
+document.getElementById("labourPerCover").textContent=
+money(labourPerCover);
+
+let status=document.getElementById("forecastStatus");
+
+if(!sales){
+status.className="status";
+status.textContent="Enter expected sales to calculate your forecast.";
+}
+else if(labourPct>35){
+status.className="status alert";
+status.textContent="Forecast labour is high. Review staffing or expected sales.";
+}
+else{
+status.className="status good";
+status.textContent="Forecast labour is within the current guideline.";
+}
+
+}  function show(id,btn){
 
 document.querySelectorAll("section")
 .forEach(x=>x.classList.add("hidden"));
