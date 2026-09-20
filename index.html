@@ -4,33 +4,192 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ShiftPilot — Hospitality Manager Toolkit</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,Arial,sans-serif;background:#f5f6f8;color:#18202a}
-header{background:#111827;color:white;padding:24px 6%;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:25px;font-weight:800}.sub{color:#aeb7c5;font-size:13px;margin-top:4px}
-main{max-width:1200px;margin:28px auto;padding:0 20px}
-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
-nav button{border:0;background:#e5e7eb;padding:11px 16px;border-radius:9px;font-weight:700;cursor:pointer}
-nav button.active{background:#111827;color:white}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
-.card{background:white;border-radius:14px;padding:20px;box-shadow:0 2px 10px #0000000d;margin-bottom:18px}
-.label{font-size:13px;color:#6b7280}.value{font-size:28px;font-weight:800;margin:7px 0}
-input,textarea{width:100%;padding:12px;border:1px solid #d7dce3;border-radius:8px;font-size:15px}
-textarea{min-height:130px;resize:vertical}
-.section{margin-top:22px}.section h2{font-size:19px}
-.formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
-.progress{height:9px;background:#e5e7eb;border-radius:9px;overflow:hidden}.bar{height:100%;background:#111827}
-.check{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #eee}
+
+body{
+margin:0;
+font-family:Inter,Arial,sans-serif;
+background:#f4f5f7;
+color:#17202a
+}
+
+header{
+background:#111827;
+color:white;
+padding:22px 6%;
+display:flex;
+justify-content:space-between;
+align-items:center
+}
+
+.logo{font-size:26px;font-weight:800}
+.sub{color:#aeb7c5;font-size:13px;margin-top:4px}
+
+.date{
+font-size:13px;
+color:#cbd5e1;
+text-align:right
+}
+
+main{
+max-width:1200px;
+margin:28px auto;
+padding:0 20px
+}
+
+nav{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+margin-bottom:22px
+}
+
+nav button{
+border:0;
+background:#e5e7eb;
+padding:11px 16px;
+border-radius:9px;
+font-weight:700;
+cursor:pointer
+}
+
+nav button.active{
+background:#111827;
+color:white
+}
+
+.card{
+background:white;
+border-radius:15px;
+padding:20px;
+box-shadow:0 2px 12px #0000000c;
+margin-bottom:18px
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:15px
+}
+
+.label{
+font-size:13px;
+color:#6b7280
+}
+
+.value{
+font-size:27px;
+font-weight:800;
+margin:7px 0
+}
+
+input,textarea{
+width:100%;
+padding:12px;
+border:1px solid #d7dce3;
+border-radius:8px;
+font-size:15px
+}
+
+textarea{
+min-height:130px;
+resize:vertical
+}
+
+.formgrid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px
+}
+
+.section{margin-top:22px}
+
+.section h2{
+font-size:19px;
+margin-top:0
+}
+
+.progress{
+height:9px;
+background:#e5e7eb;
+border-radius:9px;
+overflow:hidden;
+margin-top:10px
+}
+
+.bar{
+height:100%;
+background:#111827;
+width:0%
+}
+
+.status{
+padding:12px 14px;
+border-radius:9px;
+margin-top:10px;
+font-size:14px;
+font-weight:700
+}
+
+.good{background:#dcfce7;color:#166534}
+.warning{background:#fef3c7;color:#92400e}
+.alert{background:#fee2e2;color:#991b1b}
+
+.action{
+display:flex;
+gap:10px;
+padding:12px 0;
+border-bottom:1px solid #eee
+}
+
+.action input{width:auto}
+
+.check{
+display:flex;
+gap:10px;
+padding:12px 0;
+border-bottom:1px solid #eee
+}
+
 .check input{width:auto}
-.row{display:flex;gap:12px;align-items:end}
-button.primary{background:#111827;color:white;border:0;padding:12px 18px;border-radius:8px;font-weight:700;cursor:pointer}
-.small{font-size:12px;color:#6b7280}
+
+button.primary{
+background:#111827;
+color:white;
+border:0;
+padding:12px 18px;
+border-radius:8px;
+font-weight:700;
+cursor:pointer
+}
+
+.small{
+font-size:12px;
+color:#6b7280
+}
+
 .hidden{display:none}
-@media(max-width:800px){.grid,.formgrid{grid-template-columns:1fr 1fr}}
-@media(max-width:520px){.grid,.formgrid{grid-template-columns:1fr}header{display:block}}
+
+.two{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:18px
+}
+
+@media(max-width:850px){
+.grid,.formgrid,.two{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:550px){
+.grid,.formgrid,.two{grid-template-columns:1fr}
+header{display:block}
+.date{text-align:left;margin-top:12px}
+}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -38,10 +197,11 @@ button.primary{background:#111827;color:white;border:0;padding:12px 18px;border-
 <div class="logo">ShiftPilot</div>
 <div class="sub">Hospitality Manager Toolkit</div>
 </div>
-<div class="small">Manager Dashboard</div>
+<div class="date" id="today"></div>
 </header>
 
 <main>
+
 <nav>
 <button class="active" onclick="show('dashboard',this)">Dashboard</button>
 <button onclick="show('checklists',this)">Checklists</button>
@@ -50,67 +210,228 @@ button.primary{background:#111827;color:white;border:0;padding:12px 18px;border-
 </nav>
 
 <section id="dashboard">
+
+<div class="card">
+<h2>Shift Pulse</h2>
+<p class="small">Your key numbers for today's operation.</p>
+
 <div class="grid">
-<div class="card"><div class="label">Today's Sales</div><div class="value" id="salesDisplay">£0</div><input id="sales" type="number" placeholder="Enter sales" oninput="calculate()"></div>
-<div class="card"><div class="label">Labour Cost</div><div class="value" id="labourDisplay">£0</div><input id="labour" type="number" placeholder="Enter labour" oninput="calculate()"></div>
-<div class="card"><div class="label">Labour %</div><div class="value" id="labourPct">0%</div><div class="progress"><div class="bar" id="labourBar"></div></div></div>
-<div class="card"><div class="label">Waste</div><div class="value" id="wasteDisplay">£0</div><input id="waste" type="number" placeholder="Enter waste" oninput="calculate()"></div>
+
+<div>
+<div class="label">Today's Sales</div>
+<div class="value" id="salesDisplay">£0</div>
+<input id="sales" type="number" placeholder="Enter sales" oninput="calculate()">
+</div>
+
+<div>
+<div class="label">Daily Target</div>
+<div class="value" id="targetDisplay">£0</div>
+<input id="target" type="number" placeholder="e.g. 10000" oninput="calculate()">
+</div>
+
+<div>
+<div class="label">Labour Cost</div>
+<div class="value" id="labourDisplay">£0</div>
+<input id="labour" type="number" placeholder="Enter labour" oninput="calculate()">
+</div>
+
+<div>
+<div class="label">Waste</div>
+<div class="value" id="wasteDisplay">£0</div>
+<input id="waste" type="number" placeholder="Enter waste" oninput="calculate()">
+</div>
+
+</div>
+</div>
+
+<div class="grid">
+
+<div class="card">
+<div class="label">Sales Gap</div>
+<div class="value" id="gap">£0</div>
+<div class="small">Remaining to target</div>
+</div>
+
+<div class="card">
+<div class="label">Labour %</div>
+<div class="value" id="labourPct">0%</div>
+<div class="progress"><div class="bar" id="labourBar"></div></div>
+</div>
+
+<div class="card">
+<div class="label">Waste %</div>
+<div class="value" id="wastePct">0%</div>
+<div class="small">Waste vs sales</div>
+</div>
+
+<div class="card">
+<div class="label">Target Progress</div>
+<div class="value" id="progressText">0%</div>
+<div class="progress"><div class="bar" id="salesBar"></div></div>
+</div>
+
+</div>
+
+<div class="two">
+
+<div class="card">
+<h2>Manager Actions</h2>
+
+<label class="action">
+<input type="checkbox">
+Check staffing against bookings
+</label>
+
+<label class="action">
+<input type="checkbox">
+Review today's sales target
+</label>
+
+<label class="action">
+<input type="checkbox">
+Check 86'd items and stock
+</label>
+
+<label class="action">
+<input type="checkbox">
+Review maintenance issues
+</label>
+
+<label class="action">
+<input type="checkbox">
+Complete opening / closing checks
+</label>
+
+</div>
+
+<div class="card">
+<h2>Shift Status</h2>
+<div id="status">
+Enter today's figures to see your shift status.
+</div>
+</div>
+
 </div>
 
 <div class="card section">
-<h2>Daily Target</h2>
-<div class="formgrid">
-<div><div class="label">Sales target</div><input id="target" type="number" placeholder="e.g. 12000" oninput="calculate()"></div>
-<div><div class="label">Sales gap</div><div class="value" id="gap">£0</div></div>
-<div><div class="label">Waste %</div><div class="value" id="wastePct">0%</div></div>
-</div>
-</div>
 
-<div class="card section">
 <h2>Service Charge / Tronc</h2>
+
 <div class="formgrid">
-<div><div class="label">Points per hour</div><input id="points" type="number" value="4" oninput="calculate()"></div>
-<div><div class="label">Hours worked</div><input id="hours" type="number" placeholder="e.g. 45" oninput="calculate()"></div>
-<div><div class="label">£ per point</div><input id="pointValue" type="number" step="0.01" placeholder="e.g. 0.80" oninput="calculate()"></div>
+
+<div>
+<div class="label">Points per hour</div>
+<input id="points" type="number" value="4" oninput="calculate()">
 </div>
+
+<div>
+<div class="label">Hours worked</div>
+<input id="hours" type="number" placeholder="e.g. 45" oninput="calculate()">
+</div>
+
+<div>
+<div class="label">£ per point</div>
+<input id="pointValue" type="number" step="0.01" placeholder="e.g. 0.80" oninput="calculate()">
+</div>
+
+</div>
+
 <div class="value" id="tronc">Estimated tronc: £0</div>
+
 </div>
+
 </section>
+
 
 <section id="checklists" class="hidden">
+
 <div class="card">
+
 <h2>Opening Checklist</h2>
+
+<p class="small">
+Complete the key checks before service.
+</p>
+
 <div id="checks"></div>
+
 </div>
+
 </section>
+
 
 <section id="handover" class="hidden">
+
 <div class="card">
+
 <h2>Shift Handover</h2>
-<p class="small">Leave clear notes for the next manager.</p>
-<textarea id="handoverText" placeholder="Sales, staffing, incidents, maintenance, stock, VIPs, follow-ups..."></textarea>
-<br><br><button class="primary" onclick="saveHandover()">Save Handover</button>
+
+<p class="small">
+Leave clear notes for the next manager.
+</p>
+
+<textarea id="handoverText"
+placeholder="Sales, staffing, incidents, maintenance, stock, VIPs, follow-ups..."></textarea>
+
+<br><br>
+
+<button class="primary" onclick="saveHandover()">
+Save Handover
+</button>
+
 <p id="saved" class="small"></p>
+
 </div>
+
 </section>
 
+
 <section id="weekly" class="hidden">
+
 <div class="card">
+
 <h2>Weekly Manager Review</h2>
+
+<p class="small">
+Review your week's sales, labour and waste performance.
+</p>
+
 <div class="formgrid">
-<div><div class="label">Weekly sales</div><input id="weekSales" type="number" placeholder="£"></div>
-<div><div class="label">Weekly labour</div><input id="weekLabour" type="number" placeholder="£"></div>
-<div><div class="label">Weekly waste</div><input id="weekWaste" type="number" placeholder="£"></div>
+
+<div>
+<div class="label">Weekly Sales</div>
+<input id="weekSales" type="number" placeholder="£">
 </div>
+
+<div>
+<div class="label">Weekly Labour</div>
+<input id="weekLabour" type="number" placeholder="£">
+</div>
+
+<div>
+<div class="label">Weekly Waste</div>
+<input id="weekWaste" type="number" placeholder="£">
+</div>
+
+</div>
+
 <br>
-<button class="primary" onclick="weekly()">Calculate Review</button>
+
+<button class="primary" onclick="weekly()">
+Calculate Review
+</button>
+
 <div id="weeklyResult" class="section"></div>
+
 </div>
+
 </section>
 
 </main>
 
+
 <script>
+
 const checklist=[
 "Complete venue walk-through",
 "Check cleanliness and guest areas",
@@ -123,59 +444,168 @@ const checklist=[
 "Review maintenance issues"
 ];
 
-document.getElementById("checks").innerHTML=checklist.map((x,i)=>
-<label class="check"><input type="checkbox" onchange="saveChecks()" id="c${i}">${x}</label>).join("");
+document.getElementById("checks").innerHTML=
+checklist.map((x,i)=>
+`<label class="check">
+<input type="checkbox" onchange="saveChecks()" id="c${i}">
+${x}
+</label>`).join("");
 
 function saveChecks(){
-checklist.forEach((_,i)=>localStorage.setItem("check"+i,document.getElementById("c"+i).checked));
-}
 checklist.forEach((_,i)=>{
-document.getElementById("c"+i).checked=localStorage.getItem("check"+i)==="true";
+localStorage.setItem(
+"check"+i,
+document.getElementById("c"+i).checked
+);
+});
+}
+
+checklist.forEach((_,i)=>{
+document.getElementById("c"+i).checked=
+localStorage.getItem("check"+i)==="true";
 });
 
-function money(n){return "£"+Number(n||0).toLocaleString("en-GB",{minimumFractionDigits:0,maximumFractionDigits:2})}
+function money(n){
+return "£"+Number(n||0).toLocaleString(
+"en-GB",
+{
+minimumFractionDigits:0,
+maximumFractionDigits:2
+}
+);
+}
 
 function calculate(){
+
 let s=+document.getElementById("sales").value||0;
+let t=+document.getElementById("target").value||0;
 let l=+document.getElementById("labour").value||0;
 let w=+document.getElementById("waste").value||0;
-let t=+document.getElementById("target").value||0;
 let p=+document.getElementById("points").value||0;
 let h=+document.getElementById("hours").value||0;
 let pv=+document.getElementById("pointValue").value||0;
 
+let labourPct=s?(l/s*100):0;
+let wastePct=s?(w/s*100):0;
+let progress=t?(s/t*100):0;
+
 document.getElementById("salesDisplay").textContent=money(s);
+document.getElementById("targetDisplay").textContent=money(t);
 document.getElementById("labourDisplay").textContent=money(l);
 document.getElementById("wasteDisplay").textContent=money(w);
-document.getElementById("labourPct").textContent=s?(l/s*100).toFixed(1)+"%":"0%";
-document.getElementById("labourBar").style.width=Math.min(s?l/s*100:0,100)+"%";
-document.getElementById("gap").textContent=money(t-s);
-document.getElementById("wastePct").textContent=s?(w/s*100).toFixed(1)+"%":"0%";
-document.getElementById("tronc").textContent="Estimated tronc: "+money(phpv);
+
+document.getElementById("labourPct").textContent=
+labourPct.toFixed(1)+"%";
+
+document.getElementById("wastePct").textContent=
+wastePct.toFixed(1)+"%";
+
+document.getElementById("gap").textContent=
+money(Math.max(t-s,0));
+
+document.getElementById("progressText").textContent=
+Math.min(progress,100).toFixed(0)+"%";
+
+document.getElementById("labourBar").style.width=
+Math.min(labourPct,100)+"%";
+
+document.getElementById("salesBar").style.width=
+Math.min(progress,100)+"%";
+
+document.getElementById("tronc").textContent=
+"Estimated tronc: "+money(phpv);
+
+let status=document.getElementById("status");
+
+if(!s){
+status.className="status";
+status.textContent="Enter today's figures to see your shift status.";
+return;
+}
+
+if(labourPct>35){
+status.className="status alert";
+status.textContent="Labour is high. Review staffing against sales.";
+}
+else if(progress<70 && t>0){
+status.className="status warning";
+status.textContent="Sales are behind target. Review bookings and sales opportunities.";
+}
+else{
+status.className="status good";
+status.textContent="Shift is currently looking healthy. Keep monitoring performance.";
+}
+
 }
 
 function show(id,btn){
-document.querySelectorAll("section").forEach(x=>x.classList.add("hidden"));
-document.getElementById(id).classList.remove("hidden");
-document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+
+document.querySelectorAll("section")
+.forEach(x=>x.classList.add("hidden"));
+
+document.getElementById(id)
+.classList.remove("hidden");
+
+document.querySelectorAll("nav button")
+.forEach(x=>x.classList.remove("active"));
+
 btn.classList.add("active");
 }
 
 function saveHandover(){
-localStorage.setItem("handover",document.getElementById("handoverText").value);
-document.getElementById("saved").textContent="Handover saved on this device.";
+
+localStorage.setItem(
+"handover",
+document.getElementById("handoverText").value
+);
+
+document.getElementById("saved").textContent=
+"Handover saved on this device.";
 }
-document.getElementById("handoverText").value=localStorage.getItem("handover")||"";
+
+document.getElementById("handoverText").value=
+localStorage.getItem("handover")||"";
 
 function weekly(){
+
 let s=+document.getElementById("weekSales").value||0;
 let l=+document.getElementById("weekLabour").value||0;
 let w=+document.getElementById("weekWaste").value||0;
-document.getElementById("weeklyResult").innerHTML=
-`<div class="value">Labour: ${s?(l/s*100).toFixed(1):0}%</div>
-<div class="value">Waste: ${s?(w/s*100).toFixed(1):0}%</div>
-<div class="small">Use these figures to review performance and identify actions for next week.</div>`;
+
+document.getElementById("weeklyResult").innerHTML=`
+
+<div class="grid">
+
+<div class="card">
+<div class="label">Labour</div>
+<div class="value">${s?(l/s*100).toFixed(1):0}%</div>
+</div>
+
+<div class="card">
+<div class="label">Waste</div>
+<div class="value">${s?(w/s*100).toFixed(1):0}%</div>
+</div>
+
+</div>
+
+<p class="small">
+Use these figures to identify actions and priorities for next week.
+</p>
+`;
 }
+
+document.getElementById("today").textContent=
+new Date().toLocaleDateString(
+"en-GB",
+{
+weekday:"long",
+day:"numeric",
+month:"long",
+year:"numeric"
+}
+);
+
 </script>
+
 </body>
 </html>
