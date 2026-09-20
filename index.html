@@ -317,26 +317,73 @@ Enter today's figures to see your shift status.
 
 <h2>Service Charge / Tronc</h2>
 
+<p class="small">
+Calculate the value of each point from the total service charge pool and your team.
+</p>
+
 <div class="formgrid">
 
 <div>
-<div class="label">Points per hour</div>
-<input id="points" type="number" value="4" oninput="calculate()">
-</div>
-
-<div>
-<div class="label">Hours worked</div>
-<input id="hours" type="number" placeholder="e.g. 45" oninput="calculate()">
-</div>
-
-<div>
-<div class="label">£ per point</div>
-<input id="pointValue" type="number" step="0.01" placeholder="e.g. 0.80" oninput="calculate()">
+<div class="label">Total Service Charge Pool</div>
+<input id="serviceChargePool" type="number" step="0.01" placeholder="e.g. 5000">
 </div>
 
 </div>
 
-<div class="value" id="tronc">Estimated tronc: £0</div>
+<br>
+
+<div class="label">Team</div>
+
+<div id="teamRows">
+
+<div class="team-row">
+
+<input type="text" class="employeeName" placeholder="Employee name">
+
+<input type="number" class="employeePoints" step="0.1" placeholder="Points">
+
+<input type="number" class="employeeHours" step="0.5" placeholder="Hours">
+
+<div class="employeeTronc">£0.00</div>
+
+<button type="button" onclick="removeEmployee(this)">
+Remove
+</button>
+
+</div>
+
+</div>
+
+<br>
+
+<button type="button" class="primary" onclick="addEmployee()">
++ Add Employee
+</button>
+
+<button type="button" class="primary" onclick="calculateTronc()">
+Calculate Tronc
+</button>
+
+<div class="grid section">
+
+<div class="card">
+<div class="label">Total Weighted Points</div>
+<div class="value" id="totalWeightedPoints">0</div>
+</div>
+
+<div class="card">
+<div class="label">Value Per Point</div>
+<div class="value" id="pointValueDisplay">£0.00</div>
+</div>
+
+<div class="card">
+<div class="label">Total Distributed</div>
+<div class="value" id="totalDistributed">£0.00</div>
+</div>
+
+</div>
+
+<div id="troncDistributionStatus" class="section"></div>
 
 </div>
 
@@ -549,9 +596,7 @@ let s=+document.getElementById("sales").value||0;
 let t=+document.getElementById("target").value||0;
 let l=+document.getElementById("labour").value||0;
 let w=+document.getElementById("waste").value||0;
-let p=+document.getElementById("points").value||0;
-let h=+document.getElementById("hours").value||0;
-let pv=+document.getElementById("pointValue").value||0;
+
 
 let labourPct=s?(l/s*100):0;
 let wastePct=s?(w/s*100):0;
@@ -580,8 +625,7 @@ Math.min(labourPct,100)+"%";
 document.getElementById("salesBar").style.width=
 Math.min(progress,100)+"%";
 
-document.getElementById("tronc").textContent=
-"Estimated tronc: "+money(p*h*pv);
+
   
 let status=document.getElementById("status");
 
@@ -642,6 +686,135 @@ status.className="status good";
 status.textContent="Forecast labour is within the current guideline.";
 }
 };
+  function addEmployee(){
+
+let row=document.createElement("div");
+
+row.className="team-row";
+
+row.innerHTML=`
+
+<input type="text" class="employeeName" placeholder="Employee name">
+
+<input type="number" class="employeePoints" step="0.1" placeholder="Points">
+
+<input type="number" class="employeeHours" step="0.5" placeholder="Hours">
+
+<div class="employeeTronc">£0.00</div>
+
+<button type="button" onclick="removeEmployee(this)">
+Remove
+</button>
+
+`;
+
+document.getElementById("teamRows").appendChild(row);
+
+}
+
+
+function removeEmployee(button){
+
+button.parentElement.remove();
+
+calculateTronc();
+
+}
+
+
+function calculateTronc(){
+
+let pool=
++document.getElementById("serviceChargePool").value||0;
+
+let rows=
+document.querySelectorAll("#teamRows .team-row");
+
+let totalWeightedPoints=0;
+
+rows.forEach(row=>{
+
+let points=
++row.querySelector(".employeePoints").value||0;
+
+let hours=
++row.querySelector(".employeeHours").value||0;
+
+totalWeightedPoints+=points*hours;
+
+});
+
+
+let pointValue=
+totalWeightedPoints>0
+?pool/totalWeightedPoints
+:0;
+
+
+let totalDistributed=0;
+
+
+rows.forEach(row=>{
+
+let points=
++row.querySelector(".employeePoints").value||0;
+
+let hours=
++row.querySelector(".employeeHours").value||0;
+
+let employeeTronc=
+points*hours*pointValue;
+
+row.querySelector(".employeeTronc").textContent=
+money(employeeTronc);
+
+totalDistributed+=employeeTronc;
+
+});
+
+
+document.getElementById("totalWeightedPoints").textContent=
+totalWeightedPoints.toFixed(1);
+
+document.getElementById("pointValueDisplay").textContent=
+money(pointValue);
+
+document.getElementById("totalDistributed").textContent=
+money(totalDistributed);
+
+
+let status=
+document.getElementById("troncDistributionStatus");
+
+
+if(!pool){
+
+status.className="status";
+
+status.textContent=
+"Enter the total service charge pool.";
+
+}
+
+else if(!totalWeightedPoints){
+
+status.className="status";
+
+status.textContent=
+"Add employee points and hours to calculate the distribution.";
+
+}
+
+else{
+
+status.className="status good";
+
+status.textContent=
+"100% of the service charge pool is allocated across the team.";
+
+}
+
+}
 function show(id,btn){
 
 document.querySelectorAll("section")
