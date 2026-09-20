@@ -614,7 +614,7 @@ let staff=+document.getElementById("forecastStaff").value||0;
 let hours=+document.getElementById("forecastHours").value||0;
 let rate=+document.getElementById("forecastRate").value||0;
 
-let labour=staffhoursrate;
+let labour=staff*hours*rate;
 let labourPct=sales?(labour/sales*100):0;
 let labourPerCover=covers?(labour/covers):0;
 
