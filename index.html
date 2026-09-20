@@ -1,1 +1,181 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ShiftPilot — Hospitality Manager Toolkit</title><style>body{font-family:Inter,Arial,sans-serif;margin:0;background:#f5f5f3;color:#171717}header{background:#171717;color:#fff;padding:28px 22px}h1{margin:0 0 6px}main{max-width:1100px;margin:24px auto;padding:0 16px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}.card{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 12px #0000000d}.metric{font-size:30px;font-weight:800}.muted{color:#666}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}input,select,button,textarea{font:inherit;padding:10px;border:1px solid #ccc;border-radius:8px}button{cursor:pointer;background:#171717;color:#fff}.danger{background:#9b1c1c}.ok{background:#26734d}.task{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #eee}.task input{width:18px;height:18px}.bar{height:10px;background:#eee;border-radius:8px;overflow:hidden}.fill{height:100%;background:#171717}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.hidden{display:none}.small{font-size:13px}.notice{background:#fff7d6;border:1px solid #ead98b;padding:12px;border-radius:10px}</style></head><body><header><h1>ShiftPilot</h1><div>Hospitality Manager Toolkit — sales, labour, stock, waste & shift control</div></header><main><div class="notice">Prototype MVP: data is stored locally in this browser. It is not legal, HR, food-safety or accounting advice.</div><div class="tabs"><button onclick="show('dashboard')">Dashboard</button><button onclick="show('checklists')">Checklists</button><button onclick="show('kpi')">KPIs</button><button onclick="show('handover')">Handover</button></div><section id="dashboard"><div class="grid"><div class="card"><div class="muted">Today's sales</div><div class="metric" id="salesMetric">£0</div><input id="sales" type="number" placeholder="Enter sales" oninput="calc()"></div><div class="card"><div class="muted">Labour cost</div><div class="metric" id="labourMetric">£0</div><input id="labour" type="number" placeholder="Enter labour" oninput="calc()"></div><div class="card"><div class="muted">Labour %</div><div class="metric" id="labourPct">0%</div></div><div class="card"><div class="muted">Waste</div><div class="metric" id="wasteMetric">£0</div><input id="waste" type="number" placeholder="Enter waste" oninput="calc()"></div></div><div class="card" style="margin-top:16px"><h2>Shift pulse</h2><div id="pulse">Enter today's sales and labour to calculate labour percentage.</div></div></section><section id="checklists" class="hidden"><div class="card"><h2>Opening checklist</h2><div id="tasks"></div><button class="ok" onclick="resetTasks()">Reset checklist</button></div></section><section id="kpi" class="hidden"><div class="grid"><div class="card"><h3>Sales target</h3><input id="target" type="number" placeholder="e.g. 5000" oninput="forecast()"><p id="forecast"></p></div><div class="card"><h3>Waste %</h3><p id="wastePct">Enter sales and waste on Dashboard.</p></div><div class="card"><h3>Service charge / tronc</h3><input id="points" type="number" placeholder="Points per hour"><input id="hours" type="number" placeholder="Hours"><input id="pointValue" type="number" step="0.01" placeholder="£ per point"><p id="tronc"></p></div></div></section><section id="handover" class="hidden"><div class="card"><h2>Manager handover</h2><textarea id="hand" rows="10" style="width:100%;box-sizing:border-box" placeholder="Sales / staffing / stock / incidents / maintenance / follow-ups..."></textarea><button onclick="saveHand()">Save handover</button><button class="danger" onclick="clearHand()">Clear</button><p class="small muted">Saved locally in this browser.</p></div></section></main><script>const tasks=['FOH clean and set','Bar stock checked','Fridges at required temperature','Till/POS checked','Bookings and VIPs reviewed','Staffing and breaks confirmed','86 / low-stock items checked','Music / lighting / ambience checked','Cash float confirmed','Pre-shift briefing completed'];function loadTasks(){let done=JSON.parse(localStorage.getItem('tasks')||'[]');document.getElementById('tasks').innerHTML=tasks.map((t,i)=>`<label class="task"><input type="checkbox" ${done[i]?'checked':''} onchange="toggleTask(${i},this.checked)">${t}</label>`).join('')}function toggleTask(i,v){let d=JSON.parse(localStorage.getItem('tasks')||'[]');d[i]=v;localStorage.setItem('tasks',JSON.stringify(d))}function resetTasks(){localStorage.removeItem('tasks');loadTasks()}function calc(){let s=+document.getElementById('sales').value||0,l=+document.getElementById('labour').value||0,w=+document.getElementById('waste').value||0;document.getElementById('salesMetric').textContent='£'+s.toLocaleString();document.getElementById('labourMetric').textContent='£'+l.toLocaleString();let p=s?l/s*100:0;document.getElementById('labourPct').textContent=p.toFixed(1)+'%';document.getElementById('wasteMetric').textContent='£'+w.toLocaleString();document.getElementById('wastePct').textContent=s?`Waste is ${(w/s*100).toFixed(2)}% of sales.`:'Enter sales and waste on Dashboard.';document.getElementById('pulse').textContent=s?`Labour is ${p.toFixed(1)}% of sales. ${p<=25?'Within a 25% guide threshold.':'Above a 25% guide threshold — review staffing, hours and sales mix.'}`:'Enter today’s sales and labour to calculate labour percentage.'}function forecast(){let t=+document.getElementById('target').value||0,s=+document.getElementById('sales').value||0;document.getElementById('forecast').textContent=t?`You are £${Math.max(0,t-s).toLocaleString()} below target based on today's entered sales.`:''}function saveHand(){localStorage.setItem('handover',document.getElementById('hand').value)}function clearHand(){localStorage.removeItem('handover');document.getElementById('hand').value=''}function show(id){['dashboard','checklists','kpi','handover'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id))}loadTasks();document.getElementById('hand').value=localStorage.getItem('handover')||'';calc();</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ShiftPilot — Hospitality Manager Toolkit</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Arial,sans-serif;background:#f5f6f8;color:#18202a}
+header{background:#111827;color:white;padding:24px 6%;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:25px;font-weight:800}.sub{color:#aeb7c5;font-size:13px;margin-top:4px}
+main{max-width:1200px;margin:28px auto;padding:0 20px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+nav button{border:0;background:#e5e7eb;padding:11px 16px;border-radius:9px;font-weight:700;cursor:pointer}
+nav button.active{background:#111827;color:white}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.card{background:white;border-radius:14px;padding:20px;box-shadow:0 2px 10px #0000000d;margin-bottom:18px}
+.label{font-size:13px;color:#6b7280}.value{font-size:28px;font-weight:800;margin:7px 0}
+input,textarea{width:100%;padding:12px;border:1px solid #d7dce3;border-radius:8px;font-size:15px}
+textarea{min-height:130px;resize:vertical}
+.section{margin-top:22px}.section h2{font-size:19px}
+.formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.progress{height:9px;background:#e5e7eb;border-radius:9px;overflow:hidden}.bar{height:100%;background:#111827}
+.check{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #eee}
+.check input{width:auto}
+.row{display:flex;gap:12px;align-items:end}
+button.primary{background:#111827;color:white;border:0;padding:12px 18px;border-radius:8px;font-weight:700;cursor:pointer}
+.small{font-size:12px;color:#6b7280}
+.hidden{display:none}
+@media(max-width:800px){.grid,.formgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.grid,.formgrid{grid-template-columns:1fr}header{display:block}}
+</style>
+</head>
+<body>
+
+<header>
+<div>
+<div class="logo">ShiftPilot</div>
+<div class="sub">Hospitality Manager Toolkit</div>
+</div>
+<div class="small">Manager Dashboard</div>
+</header>
+
+<main>
+<nav>
+<button class="active" onclick="show('dashboard',this)">Dashboard</button>
+<button onclick="show('checklists',this)">Checklists</button>
+<button onclick="show('handover',this)">Handover</button>
+<button onclick="show('weekly',this)">Weekly Review</button>
+</nav>
+
+<section id="dashboard">
+<div class="grid">
+<div class="card"><div class="label">Today's Sales</div><div class="value" id="salesDisplay">£0</div><input id="sales" type="number" placeholder="Enter sales" oninput="calculate()"></div>
+<div class="card"><div class="label">Labour Cost</div><div class="value" id="labourDisplay">£0</div><input id="labour" type="number" placeholder="Enter labour" oninput="calculate()"></div>
+<div class="card"><div class="label">Labour %</div><div class="value" id="labourPct">0%</div><div class="progress"><div class="bar" id="labourBar"></div></div></div>
+<div class="card"><div class="label">Waste</div><div class="value" id="wasteDisplay">£0</div><input id="waste" type="number" placeholder="Enter waste" oninput="calculate()"></div>
+</div>
+
+<div class="card section">
+<h2>Daily Target</h2>
+<div class="formgrid">
+<div><div class="label">Sales target</div><input id="target" type="number" placeholder="e.g. 12000" oninput="calculate()"></div>
+<div><div class="label">Sales gap</div><div class="value" id="gap">£0</div></div>
+<div><div class="label">Waste %</div><div class="value" id="wastePct">0%</div></div>
+</div>
+</div>
+
+<div class="card section">
+<h2>Service Charge / Tronc</h2>
+<div class="formgrid">
+<div><div class="label">Points per hour</div><input id="points" type="number" value="4" oninput="calculate()"></div>
+<div><div class="label">Hours worked</div><input id="hours" type="number" placeholder="e.g. 45" oninput="calculate()"></div>
+<div><div class="label">£ per point</div><input id="pointValue" type="number" step="0.01" placeholder="e.g. 0.80" oninput="calculate()"></div>
+</div>
+<div class="value" id="tronc">Estimated tronc: £0</div>
+</div>
+</section>
+
+<section id="checklists" class="hidden">
+<div class="card">
+<h2>Opening Checklist</h2>
+<div id="checks"></div>
+</div>
+</section>
+
+<section id="handover" class="hidden">
+<div class="card">
+<h2>Shift Handover</h2>
+<p class="small">Leave clear notes for the next manager.</p>
+<textarea id="handoverText" placeholder="Sales, staffing, incidents, maintenance, stock, VIPs, follow-ups..."></textarea>
+<br><br><button class="primary" onclick="saveHandover()">Save Handover</button>
+<p id="saved" class="small"></p>
+</div>
+</section>
+
+<section id="weekly" class="hidden">
+<div class="card">
+<h2>Weekly Manager Review</h2>
+<div class="formgrid">
+<div><div class="label">Weekly sales</div><input id="weekSales" type="number" placeholder="£"></div>
+<div><div class="label">Weekly labour</div><input id="weekLabour" type="number" placeholder="£"></div>
+<div><div class="label">Weekly waste</div><input id="weekWaste" type="number" placeholder="£"></div>
+</div>
+<br>
+<button class="primary" onclick="weekly()">Calculate Review</button>
+<div id="weeklyResult" class="section"></div>
+</div>
+</section>
+
+</main>
+
+<script>
+const checklist=[
+"Complete venue walk-through",
+"Check cleanliness and guest areas",
+"Check fridges and temperatures",
+"Check tills / POS",
+"Check staffing and breaks",
+"Check bookings and VIPs",
+"Check stock and 86 items",
+"Complete cash / banking checks",
+"Review maintenance issues"
+];
+
+document.getElementById("checks").innerHTML=checklist.map((x,i)=>
+<label class="check"><input type="checkbox" onchange="saveChecks()" id="c${i}">${x}</label>).join("");
+
+function saveChecks(){
+checklist.forEach((_,i)=>localStorage.setItem("check"+i,document.getElementById("c"+i).checked));
+}
+checklist.forEach((_,i)=>{
+document.getElementById("c"+i).checked=localStorage.getItem("check"+i)==="true";
+});
+
+function money(n){return "£"+Number(n||0).toLocaleString("en-GB",{minimumFractionDigits:0,maximumFractionDigits:2})}
+
+function calculate(){
+let s=+document.getElementById("sales").value||0;
+let l=+document.getElementById("labour").value||0;
+let w=+document.getElementById("waste").value||0;
+let t=+document.getElementById("target").value||0;
+let p=+document.getElementById("points").value||0;
+let h=+document.getElementById("hours").value||0;
+let pv=+document.getElementById("pointValue").value||0;
+
+document.getElementById("salesDisplay").textContent=money(s);
+document.getElementById("labourDisplay").textContent=money(l);
+document.getElementById("wasteDisplay").textContent=money(w);
+document.getElementById("labourPct").textContent=s?(l/s*100).toFixed(1)+"%":"0%";
+document.getElementById("labourBar").style.width=Math.min(s?l/s*100:0,100)+"%";
+document.getElementById("gap").textContent=money(t-s);
+document.getElementById("wastePct").textContent=s?(w/s*100).toFixed(1)+"%":"0%";
+document.getElementById("tronc").textContent="Estimated tronc: "+money(phpv);
+}
+
+function show(id,btn){
+document.querySelectorAll("section").forEach(x=>x.classList.add("hidden"));
+document.getElementById(id).classList.remove("hidden");
+document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+btn.classList.add("active");
+}
+
+function saveHandover(){
+localStorage.setItem("handover",document.getElementById("handoverText").value);
+document.getElementById("saved").textContent="Handover saved on this device.";
+}
+document.getElementById("handoverText").value=localStorage.getItem("handover")||"";
+
+function weekly(){
+let s=+document.getElementById("weekSales").value||0;
+let l=+document.getElementById("weekLabour").value||0;
+let w=+document.getElementById("weekWaste").value||0;
+document.getElementById("weeklyResult").innerHTML=
+`<div class="value">Labour: ${s?(l/s*100).toFixed(1):0}%</div>
+<div class="value">Waste: ${s?(w/s*100).toFixed(1):0}%</div>
+<div class="small">Use these figures to review performance and identify actions for next week.</div>`;
+}
+</script>
+</body>
+</html>
